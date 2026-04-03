@@ -1,0 +1,80 @@
+import requests, os, json, time
+from datetime import datetime, timezone
+
+BOT_ID = os.environ["GROUPME_BOT_ID"]
+PLAYERS = [
+    "Munetaka Murakami", "Alex Bregman", "Ketel Marte", "Bryce Harper",
+    "James Wood", "Shohei Ohtani", "Bobby Witt", "Teoscar Hernandez",
+    "Fernando Tatis", "Taylor Ward", "Pete Crow-Armstrong", "Tyler Soderstrom",
+    "Shea Langeliers", "Oneil Cruz", "Aaron Judge", "Eugenio Suarez",
+    "Corbin Carroll", "Mookie Betts", "Matt Olson", "Rafael Devers",
+    "Riley Greene", "Byron Buxton", "Cody Bellinger", "Wilson Contreras",
+    "Yordan Alvarez", "Kyle Schwarber", "Giancarlo Stanton", "Max Muncy",
+    "Willy Adames", "Junior Caminero", "Marcell Ozuna", "Julio Rodriguez",
+    "Jo Adell", "Jazz Chisholm", "Manny Machado", "Christian Walker",
+    "Mike Trout", "Pete Alonso", "Roman Anthony", "Ben Rice",
+    "Nick Kurtz", "Ronald Acuna", "Brent Rooker", "Vinnie Pasquantino",
+    "Michael Busch", "Jac Caglianone", "Trent Grisham", "Francisco Lindor",
+    "Corey Seager", "Zach Neto", "Cal Raleigh", "Juan Soto",
+    "Vladimir Guerrero Jr.", "Gunnar Henderson", "Kyle Tucker", "Jose Ramirez",
+    "Austin Riley", "Hunter Goodman", "Seiya Suzuki", "Spencer Torkelson"
+]
+
+SEEN_FILE = "seen_hrs.json"
+
+def load_seen():
+    try:
+        with open(SEEN_FILE) as f:
+            return set(json.load(f))
+    except:
+        return set()
+
+def save_seen(seen):
+    with open(SEEN_FILE, "w") as f:
+        json.dump(list(seen), f)
+
+def send_groupme(msg):
+    requests.post("https://api.groupme.com/v3/bots/post", json={
+        "bot_id": BOT_ID,
+        "text": msg
+    })
+
+def get_today_games():
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    url = f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={today}&hydrate=linescore"
+    r = requests.get(url)
+    games = []
+    for date in r.json().get("dates", []):
+        for game in date.get("games", []):
+            games.append(game["gamePk"])
+    return games
+
+def check_game_for_hrs(game_pk, seen):
+    url = f"https://statsapi.mlb.com/api/v1/game/{game_pk}/playByPlay"
+    r = requests.get(url)
+    plays = r.json().get("allPlays", [])
+    new_seen = set()
+    for play in plays:
+        result = play.get("result", {})
+        if result.get("eventType") == "home_run":
+            play_id = f"{game_pk}_{play['atBatIndex']}"
+            batter = play["matchup"]["batter"]["fullName"]
+            if play_id not in seen and any(p.lower() in batter.lower() for p in PLAYERS):
+                inning = play["about"]["inning"]
+                inning_half = "Top" if play["about"]["isTopInning"] else "Bot"
+                desc = result.get("description", "")
+                msg = f"🚨 DINGER ALERT 🚨\n{batter} just went yard!\n{inning_half} {inning} | {desc}"
+                send_groupme(msg)
+                new_seen.add(play_id)
+    return new_seen
+
+def main():
+    seen = load_seen()
+    games = get_today_games()
+    for game_pk in games:
+        new = check_game_for_hrs(game_pk, seen)
+        seen.update(new)
+    save_seen(seen)
+
+if __name__ == "__main__":
+    main()

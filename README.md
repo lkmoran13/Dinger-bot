@@ -1,2 +1,2 @@
-# Dinger-bot
+# dinger-bot
 Routes mlb homers to groupme

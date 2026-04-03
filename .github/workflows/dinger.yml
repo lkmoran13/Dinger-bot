@@ -12,6 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Cache seen HRs
+        uses: actions/cache@v3
+        with:
+          path: seen_hrs.json
+          key: seen-hrs-${{ github.run_id }}
+          restore-keys: |
+            seen-hrs-
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:

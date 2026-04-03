@@ -5,15 +5,17 @@ on:
     - cron: '* 17-23 * * *'
     - cron: '* 0-4 * * *'
   workflow_dispatch:
+  repository_dispatch:
+    types: [trigger-dinger]
 
 jobs:
   check-hrs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache seen HRs
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: seen_hrs.json
           key: seen-hrs-${{ github.run_id }}
@@ -21,7 +23,7 @@ jobs:
             seen-hrs-
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 

@@ -1,0 +1,25 @@
+name: Dinger Bot
+
+on:
+  schedule:
+    - cron: '*/5 17-4 * * *'  # Every 5 min, 12pm-11pm CT
+  workflow_dispatch:
+
+jobs:
+  check-hrs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run dinger bot
+        env:
+          GROUPME_BOT_ID: ${{ secrets.GROUPME_BOT_ID }}
+        run: python dinger_bot.py

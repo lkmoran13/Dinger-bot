@@ -1,24 +1,35 @@
-import requests, os, json, time
+import requests, os, json
 from datetime import datetime, timezone
 
 BOT_ID = os.environ["GROUPME_BOT_ID"]
-PLAYERS = [
-    "Munetaka Murakami", "Alex Bregman", "Ketel Marte", "Bryce Harper",
-    "James Wood", "Shohei Ohtani", "Bobby Witt", "Teoscar Hernandez",
-    "Fernando Tatis", "Taylor Ward", "Pete Crow-Armstrong", "Tyler Soderstrom",
-    "Shea Langeliers", "Oneil Cruz", "Aaron Judge", "Eugenio Suarez",
-    "Corbin Carroll", "Mookie Betts", "Matt Olson", "Rafael Devers",
-    "Riley Greene", "Byron Buxton", "Cody Bellinger", "Wilson Contreras",
-    "Yordan Alvarez", "Kyle Schwarber", "Giancarlo Stanton", "Max Muncy",
-    "Willy Adames", "Junior Caminero", "Marcell Ozuna", "Julio Rodriguez",
-    "Jo Adell", "Jazz Chisholm", "Manny Machado", "Christian Walker",
-    "Mike Trout", "Pete Alonso", "Roman Anthony", "Ben Rice",
-    "Nick Kurtz", "Ronald Acuna", "Brent Rooker", "Vinnie Pasquantino",
-    "Michael Busch", "Jac Caglianone", "Trent Grisham", "Francisco Lindor",
-    "Corey Seager", "Zach Neto", "Cal Raleigh", "Juan Soto",
-    "Vladimir Guerrero Jr.", "Gunnar Henderson", "Kyle Tucker", "Jose Ramirez",
-    "Austin Riley", "Hunter Goodman", "Seiya Suzuki", "Spencer Torkelson"
-]
+
+PLAYERS = {
+    "Half Cup Kent": [
+        "Munetaka Murakami", "Alex Bregman", "Ketel Marte", "Bryce Harper",
+        "James Wood", "Shohei Ohtani", "Bobby Witt", "Teoscar Hernandez",
+        "Fernando Tatis", "Taylor Ward", "Pete Crow-Armstrong", "Tyler Soderstrom"
+    ],
+    "Tommy Cold Takes": [
+        "Shea Langeliers", "Oneil Cruz", "Aaron Judge", "Eugenio Suarez",
+        "Corbin Carroll", "Mookie Betts", "Matt Olson", "Rafael Devers",
+        "Riley Greene", "Byron Buxton", "Cody Bellinger", "Wilson Contreras"
+    ],
+    "Gymbag": [
+        "Yordan Alvarez", "Kyle Schwarber", "Giancarlo Stanton", "Max Muncy",
+        "Willy Adames", "Junior Caminero", "Marcell Ozuna", "Julio Rodriguez",
+        "Jo Adell", "Jazz Chisholm", "Manny Machado", "Christian Walker"
+    ],
+    "Huncho Vos": [
+        "Mike Trout", "Pete Alonso", "Roman Anthony", "Ben Rice",
+        "Nick Kurtz", "Ronald Acuna", "Brent Rooker", "Vinnie Pasquantino",
+        "Michael Busch", "Jac Caglianone", "Trent Grisham", "Francisco Lindor"
+    ],
+    "Terrorist Moran": [
+        "Corey Seager", "Zach Neto", "Cal Raleigh", "Juan Soto",
+        "Vladimir Guerrero Jr.", "Gunnar Henderson", "Kyle Tucker", "Jose Ramirez",
+        "Austin Riley", "Hunter Goodman", "Seiya Suzuki", "Spencer Torkelson"
+    ]
+}
 
 SEEN_FILE = "seen_hrs.json"
 
@@ -38,6 +49,13 @@ def send_groupme(msg):
         "bot_id": BOT_ID,
         "text": msg
     })
+
+def get_player_team(name):
+    for team, players in PLAYERS.items():
+        for player in players:
+            if player.lower() in name.lower():
+                return team, player
+    return None, None
 
 def get_today_games():
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -59,11 +77,12 @@ def check_game_for_hrs(game_pk, seen):
         if result.get("eventType") == "home_run":
             play_id = f"{game_pk}_{play['atBatIndex']}"
             batter = play["matchup"]["batter"]["fullName"]
-            if play_id not in seen and any(p.lower() in batter.lower() for p in PLAYERS):
+            fantasy_team, matched_player = get_player_team(batter)
+            if play_id not in seen and fantasy_team:
                 inning = play["about"]["inning"]
                 inning_half = "Top" if play["about"]["isTopInning"] else "Bot"
                 desc = result.get("description", "")
-                msg = f"🚨 DINGER ALERT 🚨\n{batter} just went yard!\n{inning_half} {inning} | {desc}"
+                msg = f"🚨 DINGER ALERT 🚨\n{batter} just went yard!\nFantasy Team: {fantasy_team}\n{inning_half} {inning} | {desc}"
                 send_groupme(msg)
                 new_seen.add(play_id)
     return new_seen

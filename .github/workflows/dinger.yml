@@ -1,9 +1,12 @@
 name: Dinger Bot
 
 on:
+on:
   schedule:
-    - cron: '*/5 17-4 * * *'  # Every 5 min, 12pm-11pm CT
+    - cron: '*/5 17-23 * * *'  # 12pm-6pm CT
+    - cron: '*/5 0-4 * * *'    # 7pm-11pm CT
   workflow_dispatch:
+
 
 jobs:
   check-hrs:

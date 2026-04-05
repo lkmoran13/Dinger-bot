@@ -76,9 +76,9 @@ def get_today_games():
     return games
 
 def check_game_for_hrs(game_pk, seen):
-    url = f"https://statsapi.mlb.com/api/v1/game/{game_pk}/feed/live"
+    url = f"https://statsapi.mlb.com/api/v1/game/{game_pk}/playByPlay"
     r = requests.get(url)
-    plays = r.json().get("liveData", {}).get("plays", {}).get("allPlays", [])
+    plays = r.json().get("allPlays", [])
     print(f"Game {game_pk}: {len(plays)} plays found")
     new_seen = set()
     for play in plays:

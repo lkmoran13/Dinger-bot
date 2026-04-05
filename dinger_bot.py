@@ -59,18 +59,19 @@ def get_player_team(name):
 
 def get_today_games():
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    url = f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={today}&hydrate=linescore"
+    url = f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={today}"
     r = requests.get(url)
     games = []
     for date in r.json().get("dates", []):
         for game in date.get("games", []):
-            games.append(game["gamePk"])
+            if game.get("status", {}).get("abstractGameState") == "Live":
+                games.append(game["gamePk"])
     return games
 
 def check_game_for_hrs(game_pk, seen):
-    url = f"https://statsapi.mlb.com/api/v1/game/{game_pk}/playByPlay"
+    url = f"https://statsapi.mlb.com/api/v1/game/{game_pk}/feed/live"
     r = requests.get(url)
-    plays = r.json().get("allPlays", [])
+    plays = r.json().get("liveData", {}).get("plays", {}).get("allPlays", [])
     new_seen = set()
     for play in plays:
         result = play.get("result", {})

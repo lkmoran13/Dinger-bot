@@ -58,15 +58,19 @@ def get_player_team(name):
     return None, None
 
 def get_today_games():
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    from datetime import timedelta
+    now_et = datetime.now(timezone.utc) - timedelta(hours=4)
+    today = now_et.strftime("%Y-%m-%d")
+    print(f"Checking schedule for date: {today}")
     url = f"https://statsapi.mlb.com/api/v1/schedule?sportId=1&date={today}"
     r = requests.get(url)
     games = []
     for date in r.json().get("dates", []):
         for game in date.get("games", []):
             state = game.get("status", {}).get("abstractGameState")
-            print(f"Game {game['gamePk']}: state={state}")
-            if state == "Live":
+            detailed = game.get("status", {}).get("detailedState", "")
+            print(f"Game {game['gamePk']}: state={state} | detailed={detailed}")
+            if state == "Live" or "In Progress" in detailed:
                 games.append(game["gamePk"])
     print(f"Total live games found: {len(games)}")
     return games

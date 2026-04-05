@@ -64,8 +64,11 @@ def get_today_games():
     games = []
     for date in r.json().get("dates", []):
         for game in date.get("games", []):
-            if game.get("status", {}).get("abstractGameState") == "Live":
+            state = game.get("status", {}).get("abstractGameState")
+            print(f"Game {game['gamePk']}: state={state}")
+            if state == "Live":
                 games.append(game["gamePk"])
+    print(f"Total live games found: {len(games)}")
     return games
 
 def check_game_for_hrs(game_pk, seen):
@@ -87,18 +90,4 @@ def check_game_for_hrs(game_pk, seen):
                 inning_half = "Top" if play["about"]["isTopInning"] else "Bot"
                 desc = result.get("description", "")
                 msg = f"🚨 DINGER ALERT 🚨\n{batter} just went yard!\nFantasy Team: {fantasy_team}\n{inning_half} {inning} | {desc}"
-                send_groupme(msg)
-                new_seen.add(play_id)
-    return new_seen
-
-
-def main():
-    seen = load_seen()
-    games = get_today_games()
-    for game_pk in games:
-        new = check_game_for_hrs(game_pk, seen)
-        seen.update(new)
-    save_seen(seen)
-
-if __name__ == "__main__":
-    main()
+                send​​​​​​​​​​​​​​​​

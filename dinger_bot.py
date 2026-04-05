@@ -90,4 +90,17 @@ def check_game_for_hrs(game_pk, seen):
                 inning_half = "Top" if play["about"]["isTopInning"] else "Bot"
                 desc = result.get("description", "")
                 msg = f"🚨 DINGER ALERT 🚨\n{batter} just went yard!\nFantasy Team: {fantasy_team}\n{inning_half} {inning} | {desc}"
-                send​​​​​​​​​​​​​​​​
+                send_groupme(msg)
+                new_seen.add(play_id)
+    return new_seen
+
+def main():
+    seen = load_seen()
+    games = get_today_games()
+    for game_pk in games:
+        new = check_game_for_hrs(game_pk, seen)
+        seen.update(new)
+    save_seen(seen)
+
+if __name__ == "__main__":
+    main()

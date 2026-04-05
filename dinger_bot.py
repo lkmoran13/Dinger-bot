@@ -6,7 +6,7 @@ BOT_ID = os.environ["GROUPME_BOT_ID"]
 PLAYERS = {
     "Half Cup Kent": [
         "Munetaka Murakami", "Alex Bregman", "Ketel Marte", "Bryce Harper",
-        "James Wood", "Shohei Ohtani", "Bobby Witt", "Teoscar Hernandez",
+        "James Wood", "Shohei Ohtani", "Bobby Witt", "Teoscar Hernández",
         "Fernando Tatis", "Taylor Ward", "Pete Crow-Armstrong", "Tyler Soderstrom"
     ],
     "Tommy Cold Takes": [

@@ -72,13 +72,16 @@ def check_game_for_hrs(game_pk, seen):
     url = f"https://statsapi.mlb.com/api/v1/game/{game_pk}/feed/live"
     r = requests.get(url)
     plays = r.json().get("liveData", {}).get("plays", {}).get("allPlays", [])
+    print(f"Game {game_pk}: {len(plays)} plays found")
     new_seen = set()
     for play in plays:
         result = play.get("result", {})
         if result.get("eventType") == "home_run":
-            play_id = f"{game_pk}_{play['atBatIndex']}"
             batter = play["matchup"]["batter"]["fullName"]
+            play_id = f"{game_pk}_{play['atBatIndex']}"
+            print(f"HR found: {batter} | play_id: {play_id} | in seen: {play_id in seen}")
             fantasy_team, matched_player = get_player_team(batter)
+            print(f"Fantasy team match: {fantasy_team}")
             if play_id not in seen and fantasy_team:
                 inning = play["about"]["inning"]
                 inning_half = "Top" if play["about"]["isTopInning"] else "Bot"
@@ -87,6 +90,7 @@ def check_game_for_hrs(game_pk, seen):
                 send_groupme(msg)
                 new_seen.add(play_id)
     return new_seen
+
 
 def main():
     seen = load_seen()

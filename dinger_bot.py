@@ -12,7 +12,7 @@ PLAYERS = {
     "Tommy Cold Takes": [
         "Shea Langeliers", "Oneil Cruz", "Aaron Judge", "Eugenio Suarez",
         "Corbin Carroll", "Mookie Betts", "Matt Olson", "Rafael Devers",
-        "Riley Greene", "Byron Buxton", "Cody Bellinger", "Wilson Contreras"
+        "Riley Greene", "Byron Buxton", "Cody Bellinger", "Willson Contreras"
     ],
     "Gymbag": [
         "Yordan Alvarez", "Kyle Schwarber", "Giancarlo Stanton", "Max Muncy",

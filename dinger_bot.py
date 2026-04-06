@@ -7,7 +7,7 @@ PLAYERS = {
     "Half Cup Kent": [
         "Munetaka Murakami", "Alex Bregman", "Ketel Marte", "Bryce Harper",
         "James Wood", "Shohei Ohtani", "Bobby Witt Jr.", "Teoscar Hernández",
-        "Fernando Tatis", "Taylor Ward", "Pete Crow-Armstrong", "Tyler Soderstrom"
+        "Fernando Tatís Jr.", "Taylor Ward", "Pete Crow-Armstrong", "Tyler Soderstrom"
     ],
     "Tommy Cold Takes": [
         "Shea Langeliers", "Oneil Cruz", "Aaron Judge", "Eugenio Suárez",

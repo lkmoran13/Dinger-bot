@@ -10,7 +10,7 @@ PLAYERS = {
         "Fernando Tatis", "Taylor Ward", "Pete Crow-Armstrong", "Tyler Soderstrom"
     ],
     "Tommy Cold Takes": [
-        "Shea Langeliers", "Oneil Cruz", "Aaron Judge", "Eugenio Suarez",
+        "Shea Langeliers", "Oneil Cruz", "Aaron Judge", "Eugenio Suárez",
         "Corbin Carroll", "Mookie Betts", "Matt Olson", "Rafael Devers",
         "Riley Greene", "Byron Buxton", "Cody Bellinger", "Willson Contreras"
     ],

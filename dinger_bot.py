@@ -21,7 +21,7 @@ PLAYERS = {
     ],
     "Huncho Vos": [
         "Mike Trout", "Pete Alonso", "Roman Anthony", "Ben Rice",
-        "Nick Kurtz", "Ronald Acuña", "Brent Rooker", "Vinnie Pasquantino",
+        "Nick Kurtz", "Ronald Acuña Jr.", "Brent Rooker", "Vinnie Pasquantino",
         "Michael Busch", "Jac Caglianone", "Trent Grisham", "Francisco Lindor"
     ],
     "Terrorist Moran": [

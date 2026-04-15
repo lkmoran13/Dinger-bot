@@ -26,7 +26,7 @@ PLAYERS = {
     ],
     "Terrorist Moran": [
         "Corey Seager", "Zach Neto", "Cal Raleigh", "Juan Soto",
-        "Vladimir Guerrero Jr.", "Gunnar Henderson", "Kyle Tucker", "Jose Ramirez",
+        "Vladimir Guerrero Jr.", "Gunnar Henderson", "Kyle Tucker", "José Ramírez",
         "Austin Riley", "Hunter Goodman", "Seiya Suzuki", "Spencer Torkelson"
     ]
 }
